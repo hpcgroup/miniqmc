@@ -101,6 +101,7 @@
  */
 
 // clang-format on
+#include <hpctoolkit.h>
 
 #include <Utilities/Configuration.h>
 #include <Utilities/Communicate.h>
@@ -176,6 +177,7 @@ void print_help()
 
 int main(int argc, char** argv)
 {
+  hpctoolkit_sampling_stop();
   // clang-format off
   typedef QMCTraits::RealType           RealType;
   typedef ParticleSet::ParticlePos_t    ParticlePos_t;
@@ -403,6 +405,7 @@ int main(int argc, char** argv)
   const int nknots(mover_list[0]->nlpp.size());
 
   int my_accepted = 0;
+  hpctoolkit_sampling_start();
   for (int mc = 0; mc < nsteps; ++mc)
   {
     #pragma omp parallel for reduction(+:my_accepted)
@@ -497,6 +500,7 @@ int main(int argc, char** argv)
     } // end of mover loop
 
   } // nsteps
+  hpctoolkit_sampling_stop();
   Timers[Timer_Total]->stop();
 
   // free all movers
